@@ -1,0 +1,4 @@
+{ "title": "My Attio companies", "tools": [
+  { "name": "whoami", "server": "attio", "binding": "viewer", "access": "read" },
+  { "name": "list-records", "server": "attio", "binding": "viewer", "access": "read" }
+] }

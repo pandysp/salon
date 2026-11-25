@@ -1,0 +1,1 @@
+{ "title": "My items", "tools": [ { "name": "list_my_items", "server": "items", "binding": "viewer", "access": "read" } ] }

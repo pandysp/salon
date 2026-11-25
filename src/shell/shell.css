@@ -1,0 +1,148 @@
+/* Shell restyle: one slim bar, the page fills the rest, Share and Comments are panels that
+   stay collapsed until asked for. Calm, warm neutrals; one dark primary button. */
+:root {
+  --bg: #faf9f6; --surface: #fff; --line: #e7e4dd; --line-soft: #f0eee9; --text: #1f1e1c; --muted: #6f6b63; --accent: #c4633f;
+  --ok: #2f8a4c; --warn-bg: #fbf3e2; --warn-line: #ecd9ac; --bar-h: 48px; --radius: 10px;
+  font: 14px/1.45 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; color: var(--text); background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; }
+#root { min-height: 100vh; display: flex; flex-direction: column; } /* header + page; the viewer takes the rest (no fixed header height) */
+a { color: var(--text); text-underline-offset: 2px; }
+button, select, input, textarea { font: inherit; color: inherit; }
+button { padding: 6px 12px; border: 1px solid var(--text); background: var(--text); color: #fff; border-radius: 8px; cursor: pointer; font-weight: 500; white-space: nowrap; }
+button:hover { background: #3a3835; }
+button.ghost { background: transparent; color: var(--text); border-color: transparent; }
+button.ghost:hover { background: var(--line-soft); }
+button:disabled { opacity: .5; cursor: default; }
+button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+input, textarea, select { padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); min-width: 0; }
+.hint { color: var(--muted); font-size: 13px; }
+.error { color: #b3261e; margin: 0; }
+.spacer { flex: 1; }
+
+/* the one bar (home / sign-in / invite pages: .top; the viewer page: .bar) */
+/* dark like Claude Artifacts; the Share panel inside .bar keeps the light look */
+.top, .bar { --bar-bg: #1f1f1e; --bar-text: #ecebe8; --bar-muted: #a29e96; --bar-hover: #2f2e2c; --bar-line: #3a3936;
+  height: var(--bar-h); flex: none; display: flex; align-items: center; gap: 10px; padding: 0 16px; background: var(--bar-bg); color: var(--bar-text); border-bottom: 1px solid #000; }
+.brand { font-weight: 600; text-decoration: none; color: var(--bar-muted); flex: none; }
+.brand:hover { color: var(--bar-text); }
+:is(.top, .bar) > .ghost { color: var(--bar-text); }
+:is(.top, .bar) > .ghost:hover { background: var(--bar-hover); }
+.who { color: var(--bar-muted); font-size: 13px; white-space: nowrap; }
+.signin { color: var(--bar-text); font-weight: 500; white-space: nowrap; }
+
+.page { max-width: 720px; width: 100%; margin: 48px auto; padding: 0 20px; }
+.page.narrow { max-width: 440px; }
+.page h1 { font-size: 26px; font-weight: 600; letter-spacing: -.01em; margin: 0 0 16px; }
+.page label { display: block; margin: 12px 0; }
+.page label input { display: block; width: 100%; margin-top: 4px; }
+.list { list-style: none; padding: 0; margin: 0; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+.list li { padding: 12px 16px; border-bottom: 1px solid var(--line-soft); display: flex; gap: 10px; align-items: baseline; }
+.list li:last-child { border-bottom: 0; }
+.list a { font-weight: 500; text-decoration: none; }
+.list a:hover { text-decoration: underline; }
+.list small { color: var(--muted); margin-left: auto; }
+
+/* viewer page */
+.viewer { flex: 1; min-height: 0; height: 0; display: flex; flex-direction: column; }
+#root:has(.viewer) { height: 100vh; height: 100dvh; }
+.bar { position: relative; z-index: 5; }
+.bar .sep { color: var(--bar-line); flex: none; }
+.bar h1 { font-size: 14px; font-weight: 600; margin: 0; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.status { flex: none; width: 7px; height: 7px; border-radius: 50%; background: #c9c5bc; }
+.status[data-status="connected"] { background: var(--ok); }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.toggle { flex: none; background: transparent; color: var(--bar-text); border-color: var(--bar-line); position: relative; }
+.toggle:hover { background: var(--bar-hover); }
+.toggle.primary { background: var(--bar-hover); color: var(--bar-text); border-color: var(--bar-hover); } /* Share: a quiet filled button with a lock, like Claude (share-popover) */
+.toggle.primary:hover { background: var(--bar-line); }
+.toggle.toggle[aria-expanded="true"] { background: var(--bar-hover); color: var(--bar-text); border-color: var(--bar-muted); } /* open: also beats .primary:hover */
+.toggle[data-attention]::after { content: ""; position: absolute; top: -3px; right: -3px; width: 9px; height: 9px; border-radius: 50%; background: var(--accent); border: 2px solid var(--bar-bg); }
+
+.stage { flex: 1; display: flex; min-height: 0; position: relative; }
+.frame { flex: 1; display: flex; min-width: 0; }
+.frame iframe { flex: 1; border: 0; background: #fff; }
+
+/* panels: Share drops down under its button; Comments slides in from the right beside the page */
+.panel h2 { font-size: 14px; font-weight: 600; margin: 0; }
+.share { color: var(--text); position: absolute; top: calc(var(--bar-h) - 4px); right: 12px; width: 380px; max-height: calc(100dvh - var(--bar-h) - 16px); overflow: auto;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 12px 40px rgba(31,30,28,.14), 0 2px 6px rgba(31,30,28,.06);
+  padding: 18px 18px 0; display: flex; flex-direction: column; gap: 14px; animation: drop .14s ease-out; }
+.share section { display: flex; flex-direction: column; gap: 10px; padding-top: 14px; border-top: 1px solid var(--line-soft); }
+.share .field { display: flex; flex-direction: column; gap: 6px; font-size: 12px; font-weight: 600; color: var(--muted); }
+.share select { color: var(--text); font-size: 14px; font-weight: 400; }
+.share .check { display: flex; gap: 8px; align-items: flex-start; }
+.share .check input { margin: 2px 0 0; }
+.share .row { display: flex; gap: 8px; }
+.share .row input { flex: 1; }
+.invite-url { width: 100%; font-size: 12px; color: var(--muted); background: var(--bg); }
+.warning { color: #8a5a00; font-size: 13px; margin: 0; }
+.share .notice { border: 1px solid var(--warn-line); border-radius: 8px; }
+/* share popover like Claude Artifacts: title, invite, people, general access, footer */
+.share > h2 { font-size: 16px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.share .person { display: flex; align-items: center; gap: 10px; }
+.share .avatar { flex: none; width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; background: #7c5cd6; color: #fff; font-size: 12px; font-weight: 600; }
+.share .avatar.icon { background: var(--line-soft); color: var(--text); }
+.share .person .name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.share .person .role { color: var(--muted); }
+.share .person select { border-color: transparent; background: transparent; padding-left: 4px; font-weight: 500; cursor: pointer; }
+.share .person select:hover { background: var(--line-soft); }
+.share footer { display: flex; align-items: center; gap: 10px; min-height: 56px; margin: 0 -18px; padding: 10px 18px; border-top: 1px solid var(--line-soft); }
+.share footer .hint { flex: 1; }
+.toggle .lock { margin: -2px 6px 0 0; vertical-align: middle; }
+
+.comments { flex: none; width: 340px; padding: 14px 16px; border-left: 1px solid var(--line); background: var(--surface); display: flex; flex-direction: column; gap: 10px; overflow: auto; animation: slide .18s ease-out; }
+.comments .threads { flex: 1; display: flex; flex-direction: column; gap: 10px; } /* open threads, then the resolved toggle and list */
+.comments ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; font-size: 13px; }
+.comments textarea { min-height: 72px; resize: vertical; }
+.comments > button { align-self: flex-end; }
+/* comment threads */
+.comments .thread { display: flex; flex-direction: column; gap: 3px; padding-bottom: 10px; border-bottom: 1px solid var(--line-soft); }
+.comments .meta { font-size: 11px; color: var(--muted); display: flex; gap: 6px; align-items: center; }
+.comments .badge { padding: 0 6px; border-radius: 8px; background: var(--line-soft); color: var(--muted); }
+.comments .badge.done { background: #e5f2e8; color: var(--ok); }
+/* comment states: pi is working on a thread; resolved ones fold away */
+.comments .working { margin: 2px 0 0; font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+.comments .working .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 1.2s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: .25; } }
+/* comments filter menu: Show resolved moved here from a toggle under the list */
+.comments .head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.comments .filter { position: relative; }
+.comments .filter > button { padding: 4px 6px; color: var(--muted); display: flex; }
+.comments .filter > button[aria-expanded="true"] { background: var(--line-soft); color: var(--text); }
+.comments .menu { position: absolute; right: 0; top: calc(100% + 4px); z-index: 5; min-width: 180px; padding: 4px; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 6px 20px rgb(0 0 0 / .12); }
+.comments .menu button { display: flex; align-items: center; gap: 6px; width: 100%; padding: 6px 8px; background: transparent; color: var(--text); border: 0; border-radius: 6px; font-weight: 400; font-size: 13px; text-align: left; }
+.comments .menu button:hover { background: var(--line-soft); }
+.comments .menu .tick { width: 14px; color: var(--accent); }
+.comments .resolved .thread { opacity: .7; }
+.comments .reply { margin: 4px 0 0 8px; padding-left: 8px; border-left: 2px solid var(--line); }
+button.small { padding: 1px 7px; font-size: 11px; border-radius: 6px; }
+@keyframes slide { from { transform: translateX(24px); opacity: 0; } }
+@keyframes drop { from { transform: translateY(-4px); opacity: 0; } }
+
+/* chunk 3: approval / connect notices, consent dialog */
+.notice { padding: 10px 14px; background: var(--warn-bg); border-bottom: 1px solid var(--warn-line); font-size: 13px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.consent { position: absolute; inset: 24px auto auto 50%; transform: translateX(-50%); width: min(460px, 90%); z-index: 2; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; box-shadow: 0 12px 40px rgba(31,30,28,.16); }
+.consent h2 { font-size: 17px; margin: 0 0 8px; }
+
+/* phone: the bar stays one line; panels overlay the page at full width */
+@media (max-width: 640px) {
+  .top, .bar { padding: 0 10px; gap: 8px; }
+  .bar .who { display: none; } /* the home link stays: the title truncates instead */
+  .toggle { padding: 6px 10px; }
+  .share { left: 8px; right: 8px; width: auto; }
+  .comments { position: absolute; inset: 0; width: auto; border-left: 0; z-index: 3; }
+}
+/* comment pins: the comment-mode button, the composer pinned to the picked element, quotes in threads */
+.toggle.icon { padding: 4px 9px; }
+.toggle[aria-pressed="true"] { background: #2563eb; border-color: #2563eb; color: #fff; }
+.stage[data-comment-mode] .frame { outline: 2px solid #2563eb; outline-offset: -2px; }
+.pin { position: absolute; z-index: 4; width: 320px; display: flex; flex-direction: column; gap: 8px; padding: 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; box-shadow: 0 12px 40px rgba(31,30,28,.18); }
+.pin blockquote { margin: 0; padding: 2px 0 2px 10px; border-left: 3px solid #2563eb; color: var(--muted); font-size: 13px; max-height: 4.5em; overflow: hidden; }
+.pin textarea { min-height: 64px; resize: vertical; }
+.pin .row { display: flex; gap: 8px; align-items: center; }
+.pin .check { display: flex; gap: 6px; align-items: center; margin: 0; white-space: nowrap; }
+.comments [data-testid="comment"] { white-space: pre-wrap; }

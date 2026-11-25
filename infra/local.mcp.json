@@ -1,0 +1,6 @@
+{
+  "studio": { "url": "http://studio-mcp.localtest.me:8345/mcp", "auth": "none" },
+  "items": { "url": "http://oauth-mcp.localtest.me:8346/mcp", "auth": "oauth" },
+  "rogue": { "url": "http://rogue-mcp.localtest.me:8347/mcp", "auth": "oauth" },
+  "attio": { "url": "https://mcp.attio.com/mcp", "auth": "oauth", "oauthOrigins": ["https://app.attio.com"] }
+}

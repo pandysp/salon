@@ -1,0 +1,10 @@
+node_modules/
+app/worker.js
+app/.dev.vars
+app/.celld/
+test-results/
+playwright-report/
+.run/
+infra/prod.env
+tests/support/.tls/
+integrations/pi/artifact-bridge.state.json

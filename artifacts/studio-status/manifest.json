@@ -1,0 +1,4 @@
+{ "title": "Studio status", "tools": [
+  { "name": "uptime", "server": "studio", "binding": "owner", "access": "read", "args": {} },
+  { "name": "sw_vers", "server": "studio", "binding": "owner", "access": "read", "args": {} }
+] }

@@ -1,0 +1,1 @@
+{"title": "Adversarial test artifact", "tools": [{"name": "owner_query", "server": "studio", "binding": "owner", "args": {"q": "pinned"}}]}

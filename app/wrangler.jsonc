@@ -1,0 +1,10 @@
+// worker.js is built by `npm run build` (scripts/build.mjs).
+// APP_ORIGIN, CONTENT_ORIGIN and OWNER_LOGINS come from .dev.vars beside this file (written by infra/entrypoint.sh from the
+// container environment, or by hand for a native run).
+{
+  "name": "artifacts-platform",
+  "main": "worker.js",
+  "compatibility_date": "2026-01-01",
+  "durable_objects": { "bindings": [{ "name": "PLATFORM", "class_name": "Platform" }, { "name": "ROOM", "class_name": "Room" }] },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["Platform", "Room"] }]
+}

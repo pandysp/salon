@@ -1,0 +1,5 @@
+# The image needs only the built Worker, its config and the entrypoint.
+*
+!app/wrangler.jsonc
+!app/worker.js
+!infra/entrypoint.sh

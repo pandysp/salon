@@ -1,0 +1,4 @@
+{
+  "studio": { "url": "http://host.docker.internal:8220/mcp", "auth": "none" },
+  "attio": { "url": "https://mcp.attio.com/mcp", "auth": "oauth", "oauthOrigins": ["https://app.attio.com"] }
+}
